@@ -194,15 +194,27 @@ const pictureData = [
 ];
 
 export default function Filter() {
-  
- // 1. useState
+  // 1. useState to store what category we want to filter by and another to store the filtered data we want to map
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [filteredCategories, setFilteredCategories] = useState([]);
 
-  // 2. handle function
+  // 2. handle function- this changes the category selected when we click on each button
+  const handleCategory = (category) => {
+    setSelectedCategory(category);
+  };
 
   // 3. filter useEffect
-  // Use useEffect to update filteredCategories when selectedCategory changes
-  
-
+  // Use useEffect to filter the pictureData array and store it in filteredCategories when selectedCategory changes
+  useEffect(() => {
+    if (selectedCategory === "All") {
+      setFilteredCategories(pictureData);
+    } else {
+      const filteredData = pictureData.filter(
+        (item) => item.category === selectedCategory
+      );
+      setFilteredCategories(filteredData);
+    }
+  }, [selectedCategory]);
 
   return (
     <Container>
@@ -210,8 +222,40 @@ export default function Filter() {
         <h2>Filtering Exercise</h2>
         <ButtonContainer>
           {/* 4. make buttons */}
-        </ButtonContainer>
+          <Button
+            onClick={() => handleCategory("All")}
+            isActive={selectedCategory === "All"}
+          >
+            All Ice Cream
+          </Button>
+          <Button
+            onClick={() => handleCategory("Vanilla")}
+            isActive={selectedCategory === "Vanilla"}
+          >
+            Vanilla Ice Cream
+          </Button>
 
+          <Button
+            onClick={() => handleCategory("Chocolate")}
+            isActive={selectedCategory === "Chocolate"}
+          >
+            Chocolate Ice Cream
+          </Button>
+
+          <Button
+            onClick={() => handleCategory("Fruit")}
+            isActive={selectedCategory === "Fruit"}
+          >
+            Fruities
+          </Button>
+
+          <Button
+            onClick={() => handleCategory("Rainbow")}
+            isActive={selectedCategory === "Rainbow"}
+          >
+            Fancy Ice Cream
+          </Button>
+        </ButtonContainer>
       </FilterContainer>
 
       <PictureGallery>
@@ -220,7 +264,16 @@ export default function Filter() {
                  <PictureItem> get the map data here
                     </PictureItem> */}
 
+        {filteredCategories.map((item) => {
+          return (
+            <PictureItem key={item.id}>
+              <img src={item.image} alt={item.name} />
+              <p>{item.name}</p>
+            </PictureItem>
+          );
+        })}
       </PictureGallery>
     </Container>
   );
 }
+
